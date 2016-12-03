@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 
 #include "grayscale.hh"
+#include "convolution.hh"
 
 #include "../tools/events.hh"
 #include "../tools/surface.hh"
@@ -23,6 +24,16 @@ int main(int argc, char *argv[])
   display_image(src, renderer);
   auto grayscaled_src = grayscale(src);
   display_image(grayscaled_src, renderer);
+
+  kernel k;
+  std::vector<float> v = {1.0, 1.0, 1.0};
+  k.array.push_back(v);
+  k.array.push_back(v);
+  k.array.push_back(v);
+  k.length = 3;
+  auto blurred = apply_convolution(grayscaled_src, &k);
+  display_image(blurred, renderer);
+
   SDL_DestroyWindow(display);
   SDL_Quit();
   return 0;
